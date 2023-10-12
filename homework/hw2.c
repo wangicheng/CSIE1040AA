@@ -32,7 +32,7 @@ void printChess(void){
 vec2 solve(vec2 pos1, vec2 dir){
     int color1 = chess[pos1.x][pos1.y];
     if(color1 == 0){
-        return pos1;
+        return (vec2){-1, -1};
     }
     vec2 pos2 = pos1;
     int color2;
@@ -59,7 +59,7 @@ vec2 solve(vec2 pos1, vec2 dir){
             break;
         check = 1;
     }
-    // 無解，回傳pos1
+    // 無解，回傳(-1, -1)
     return (vec2){-1, -1};
 }
 
