@@ -1,9 +1,2 @@
-# C library (C 內建程式庫)
-## assert.h
-## ctype.h
-## math.h
-## stdio.h
-## stdlib.h
-## stdint.h
-## string.h
-## time.h
+筆記以移至以下連結：  
+https://hackmd.io/@NvemJp8VRyeyp5ni9Bhkkg/SJiRNH6bp
