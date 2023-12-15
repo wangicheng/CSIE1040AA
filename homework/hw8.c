@@ -9,10 +9,6 @@ typedef struct {
     int x, y;
 } Point;
 
-bool isEqual(Point p1, Point p2) {
-    return p1.x == p2.x && p1.y == p2.y;
-}
-
 typedef struct {
     Point stack[STACK_SIZE];
     int top;
@@ -52,6 +48,7 @@ typedef struct {
 //     }
 // }
 
+// 初始化地圖
 void initMap(Map *m) {
     int x, y, val;
     for (x = 0; x < MAP_SIZE; x++) {
@@ -62,6 +59,7 @@ void initMap(Map *m) {
     }
 }
 
+// 印出地圖
 void printMap(Map *m) {
     int x, y;
     for (x = 0; x < MAP_SIZE; x ++) {
@@ -77,21 +75,28 @@ typedef struct {
     int length;
 } Path;
 
+// 印出路徑
 void printPath(Path *p) {
     if(p->length <= 0) {
         printf("No path found\n");
         return;
     }
     int i;
+    bool mark[MAP_SIZE][MAP_SIZE] = {0};
     for (i = 0; i < p->length; i++) {
-        printf("%d %d\n", p->path[i].x, p->path[i].y);
+        mark[p->path[i].x][p->path[i].y] = true;
+    }
+    int x, y;
+    for(x = 0; x < MAP_SIZE; x ++) {
+        for(y = 0; y < MAP_SIZE; y ++) {
+            if(mark[x][y]) printf("* ");
+            else printf("  ");
+        }
+        printf("\n");
     }
 }
 
-bool isValid(Point p) {
-    return p.x >= 0 && p.x < MAP_SIZE && p.y >= 0 && p.y < MAP_SIZE;
-}
-
+// 尋找 m 的路徑，並儲存在 p 中，並返回 true，若無路徑則返回 false
 bool findPath(Map *m, Point start, Point end, Path *p) {
     Stack stack;
     initStack(&stack);
@@ -115,16 +120,18 @@ bool findPath(Map *m, Point start, Point end, Path *p) {
     while(!isEmpty(&stack)) {
         point = pop(&stack);
         p->path[steps[point.x][point.y]] = point;
-        if(isEqual(point, end)) {
+        if(point.x == end.x && point.y == end.y) {
             p->length = steps[point.x][point.y] + 1;
             return true;
         }
         for(d = 0; d < 4; d ++) {
             x = point.x + dx[d];
             y = point.y + dy[d];
-            if(isValid((Point){x, y}) && m->map[x][y] == 0 && steps[x][y] == -1) {
-                steps[x][y] = steps[point.x][point.y] + 1;
-                push(&stack, (Point){x, y});
+            if(x >= 0 && x < MAP_SIZE && y >= 0 && y < MAP_SIZE) {
+                if(m->map[x][y] == 0 && steps[x][y] == -1) {
+                    steps[x][y] = steps[point.x][point.y] + 1;
+                    push(&stack, (Point){x, y});
+                }
             }
         }
     }
